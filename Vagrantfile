@@ -22,10 +22,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 2048
-    v.name = 'nebraskadev01'
+    v.name = 'nebraskavm'
   end
 
-  config.vm.network :private_network, id: "primary", ip: "192.168.33.22"
+  config.vm.network :private_network, id: "primary", ip: "10.10.10.10"
   
   # Share an additional folders to the guest VM.
   #config.vm.synced_folder 'etc-puppet', '/etc/puppet'
