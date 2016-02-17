@@ -4,6 +4,9 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
+#Version Variables
+JAVA_VERSION = "java-1.8.0-openjdk-1.8.0.71"
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   #config.vm.box = "centos7"
@@ -11,12 +14,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #config.vm.box = "puppetlabs/centos-7.0-64-puppet"
   #config.vm.box_url = "https://github.com/tommy-muehle/puppet-vagrant-boxes/releases/download/1.1.0/centos-7.0-x86_64.box"
   #config.vm.box_url = "https://github.com/CommanderK5/packer-centos-template/releases/download/0.7.1/vagrant-centos-7.1.box"
-
-  # config.vm.provider :virtualbox do |v|
-  #     # On VirtualBox, we don't have guest additions or a functional vboxsf
-  #     # in CoreOS, so tell Vagrant that so it can be smarter.
-  #     v.check_guest_additions = false
-  # end
 
   config.vm.provider :virtualbox do |vb|
     vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
@@ -39,14 +36,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #redis port
   config.vm.network :forwarded_port, guest: 6379, host: 6380
 
+  #activemq port
+  config.vm.network :forwarded_port, guest: 8161, host: 8162
 
+  #web port
   config.vm.network :forwarded_port, guest: 80, host: 8090
   
-  # config.vm.provision "shell" do |s|
-  #   s.path "provision-mysql.sh"
-  # end
-
-  config.vm.provision "shell", path: "provision-mysql.sh"
-  config.vm.provision "shell", path: "provision-redis.sh"
+  
+  #Install Java
+  config.vm.provision "shell", inline: "yum install -y java-1.8.0-openjdk-1.8.0.71"
+  
+  config.vm.provision "shell", path: "./scripts/provision-mysql.sh"
+  config.vm.provision "shell", path: "./scripts/provision-redis.sh"
+  config.vm.provision "shell", path: "./scripts/provision-activemq.sh"
   
 end
